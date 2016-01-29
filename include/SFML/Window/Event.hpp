@@ -209,6 +209,7 @@ public:
         TouchMoved,             ///< A touch moved (data in event.touch)
         TouchEnded,             ///< A touch event ended (data in event.touch)
         SensorChanged,          ///< A sensor value changed (data in event.sensor)
+        ShakeMotion,            ///< A shake motion was detected (no data)
 
         Count                   ///< Keep last -- the total number of event types
     };

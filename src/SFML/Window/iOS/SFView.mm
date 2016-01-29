@@ -160,6 +160,15 @@
 
 
 ////////////////////////////////////////////////////////////
+- (void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event
+{
+    if (motion == UIEventSubtypeMotionShake)
+    {
+        [[SFAppDelegate getInstance] notifyShakeMotion];
+    }
+}
+
+////////////////////////////////////////////////////////////
 - (void)layoutSubviews
 {
     // update the attached context's buffers

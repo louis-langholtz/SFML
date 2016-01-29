@@ -93,6 +93,12 @@
 - (void)notifyTouchEnd:(unsigned int)index atPosition:(sf::Vector2i)position;
 
 ////////////////////////////////////////////////////////////
+/// \brief Receive an external shake motion notification
+///
+////////////////////////////////////////////////////////////
+- (void)notifyShakeMotion;
+
+////////////////////////////////////////////////////////////
 /// \brief Receive an external character notification
 ///
 /// \param character The typed character

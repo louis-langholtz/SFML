@@ -308,6 +308,17 @@ namespace
 
 
 ////////////////////////////////////////////////////////////
+- (void)notifyShakeMotion;
+{
+    if (self.sfWindow)
+    {
+        sf::Event event;
+        event.type = sf::Event::ShakeMotion;
+        sfWindow->forwardEvent(event);
+    }
+}
+
+////////////////////////////////////////////////////////////
 - (void)notifyCharacter:(sf::Uint32)character
 {
     if (self.sfWindow)
