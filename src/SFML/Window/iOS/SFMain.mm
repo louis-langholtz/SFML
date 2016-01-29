@@ -27,6 +27,7 @@
 ////////////////////////////////////////////////////////////
 #include <SFML/Window/iOS/SFMain.hpp>
 
+#if 0
 
 // sfmlMain is called by the application delegate (SFAppDelegate).
 //
@@ -59,3 +60,5 @@ __attribute__((weak)) int sfmlMain()
 {
     return 0;
 }
+
+#endif

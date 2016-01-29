@@ -26,9 +26,9 @@
 #define SFML_SFMAIN_HPP
 
 
-int sfmlMain(int argc, char** argv);
+extern int sfmlMain(int argc, char** argv);
 
-int sfmlMain();
+// int sfmlMain();
 
 
 #endif // SFML_SFMAIN_HPP
