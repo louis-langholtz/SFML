@@ -57,7 +57,9 @@ int main(int argc, char** argv)
     // Important: "SFAppDelegate" must always match the name of the
     // application delegate class defined in sfml-window
 
-    return UIApplicationMain(argc, argv, nil, @"SFAppDelegate");
+    @autoreleasepool {
+        return UIApplicationMain(argc, argv, nil, @"SFAppDelegate");
+    }
 }
 
 #endif // SFML_SYSTEM_IOS
