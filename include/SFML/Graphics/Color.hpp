@@ -41,14 +41,14 @@ class SFML_GRAPHICS_API Color
 {
 public:
 
-    ////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////
     /// \brief Default constructor
     ///
     /// Constructs an opaque black color. It is equivalent to
     /// sf::Color(0, 0, 0, 255).
     ///
     ////////////////////////////////////////////////////////////
-    Color();
+	constexpr Color() noexcept = default;
 
     ////////////////////////////////////////////////////////////
     /// \brief Construct the color from its 4 RGBA components
@@ -59,7 +59,7 @@ public:
     /// \param alpha Alpha (opacity) component (in the range [0, 255])
     ///
     ////////////////////////////////////////////////////////////
-    Color(Uint8 red, Uint8 green, Uint8 blue, Uint8 alpha = 255);
+    constexpr Color(Uint8 red, Uint8 green, Uint8 blue, Uint8 alpha = 255) noexcept: r(red), g(green), b(blue), a(alpha) {}
 
     ////////////////////////////////////////////////////////////
     /// \brief Construct the color from 32-bit unsigned integer
@@ -67,8 +67,11 @@ public:
     /// \param color Number containing the RGBA components (in that order)
     ///
     ////////////////////////////////////////////////////////////
-    explicit Color(Uint32 color);
+    explicit Color(Uint32 color) noexcept:
+        r((color & 0xff000000) >> 24), g((color & 0x00ff0000) >> 16), b((color & 0x0000ff00) >> 8), a((color & 0x000000ff) >> 0)
+    {}
 
+	~Color() = default;
     ////////////////////////////////////////////////////////////
     /// \brief Retrieve the color as a 32-bit unsigned integer
     ///
@@ -93,11 +96,13 @@ public:
     ////////////////////////////////////////////////////////////
     // Member data
     ////////////////////////////////////////////////////////////
-    Uint8 r; ///< Red component
-    Uint8 g; ///< Green component
-    Uint8 b; ///< Blue component
-    Uint8 a; ///< Alpha (opacity) component
+    Uint8 r = 0; ///< Red component
+    Uint8 g = 0; ///< Green component
+    Uint8 b = 0; ///< Blue component
+    Uint8 a = 255; ///< Alpha (opacity) component
 };
+
+constexpr Color Grey{128,128,128};
 
 ////////////////////////////////////////////////////////////
 /// \relates Color
