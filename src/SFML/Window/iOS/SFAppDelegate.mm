@@ -37,19 +37,35 @@ namespace
 
     // Current touches positions
     std::vector<sf::Vector2i> touchPositions;
+	
+	sf::Event::OrientationChangedEvent::BasicDeviceOrientation toBasicDeviceOrientation(UIDeviceOrientation orientation)
+	{
+		switch (orientation)
+		{
+			case UIDeviceOrientationFaceDown:
+				return sf::Event::OrientationChangedEvent::FaceDownOrientation;
+			case UIDeviceOrientationFaceUp:
+				return sf::Event::OrientationChangedEvent::FaceUpOrientation;
+			case UIDeviceOrientationLandscapeLeft:
+				return sf::Event::OrientationChangedEvent::LandscapeLeftOrientation;
+			case UIDeviceOrientationLandscapeRight:
+				return sf::Event::OrientationChangedEvent::LandscapeRightOrientation;
+			case UIDeviceOrientationPortrait:
+				return sf::Event::OrientationChangedEvent::PortraitRightsideUpOrientation;
+			case UIDeviceOrientationPortraitUpsideDown:
+				return sf::Event::OrientationChangedEvent::PortraitUpsideDownOrientation;
+			case UIDeviceOrientationUnknown:
+			default:
+				return sf::Event::OrientationChangedEvent::UnknownOrientation;
+		}
+	}
 }
-
-
-@interface SFAppDelegate()
-
-@property (nonatomic) CMMotionManager* motionManager;
-
-@end
 
 
 @implementation SFAppDelegate
 
 @synthesize sfWindow;
+@synthesize motionManager;
 @synthesize backingScaleFactor;
 
 
@@ -72,12 +88,7 @@ namespace
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Save the delegate instance
-    delegateInstance = self;
-
-    [self initBackingScale];
-
-    // Instantiate the motion manager
-    self.motionManager = [[CMMotionManager alloc] init];
+    delegateInstance = [self initBackingScale];
 
     // Register orientation changes notifications
     [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
@@ -90,16 +101,26 @@ namespace
     // init sequence) can end, and the default splashscreen can be destroyed
     [self performSelector:@selector(runUserMain) withObject:nil afterDelay:0.0];
 
+	application.statusBarHidden = YES;
     return true;
 }
 
-- (void)initBackingScale
+- (id)initBackingScale
 {
-    id data = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"NSHighResolutionCapable"];
-    if(data && [data boolValue])
-        backingScaleFactor = [[UIScreen mainScreen] scale];
-    else
-        backingScaleFactor = 1;
+    if (self = [super init])
+    {
+        // Instantiate the motion manager
+		motionManager = [[CMMotionManager alloc] init];
+
+        id data = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"NSHighResolutionCapable"];
+        if(data && [data boolValue])
+            backingScaleFactor = [[UIScreen mainScreen] scale];
+        else
+            backingScaleFactor = 1;
+  
+        return self;
+    }
+    return nil;
 }
 
 ////////////////////////////////////////////////////////////
@@ -140,6 +161,10 @@ namespace
         event.type = sf::Event::GainedFocus;
         sfWindow->forwardEvent(event);
     }
+	else
+	{
+		NSLog(@"no self window yet");
+	}
 }
 
 
@@ -205,18 +230,15 @@ namespace
         // Filter interesting orientations
         if (UIDeviceOrientationIsValidInterfaceOrientation(orientation))
         {
-            // Get the new size
-            sf::Vector2u size = self.sfWindow->getSize();
             // Check if the app can switch to this orientation and if so if the window's size must be adjusted
-            if ([self supportsOrientation:orientation] && [self needsToFlipFrameForOrientation:orientation])
-                std::swap(size.x, size.y);
-
-            // Send a Resized event to the current window
-            sf::Event event;
-            event.type = sf::Event::Resized;
-            event.size.width = size.x;
-            event.size.height = size.y;
-            sfWindow->forwardEvent(event);
+            if ([self supportsOrientation:orientation])
+			{
+				// Send a OrientationChanged event to the current window
+				sf::Event event;
+				event.type = sf::Event::OrientationChanged;
+				event.orientation.id = toBasicDeviceOrientation(orientation);
+				sfWindow->forwardEvent(event);
+			}
         }
     }
 }
@@ -240,7 +262,7 @@ namespace
 
 
 ////////////////////////////////////////////////////////////
-- (void)notifyTouchBegin:(unsigned int)index atPosition:(sf::Vector2i)position;
+- (void)notifyTouchBegin:(unsigned int)index withTapCount:(unsigned int)tapCount atPosition:(sf::Vector2i)position;
 {
     position.x *= backingScaleFactor;
     position.y *= backingScaleFactor;
@@ -256,6 +278,7 @@ namespace
         sf::Event event;
         event.type = sf::Event::TouchBegan;
         event.touch.finger = index;
+		event.touch.tapCount = tapCount;
         event.touch.x = position.x;
         event.touch.y = position.y;
         sfWindow->forwardEvent(event);
@@ -264,7 +287,7 @@ namespace
 
 
 ////////////////////////////////////////////////////////////
-- (void)notifyTouchMove:(unsigned int)index atPosition:(sf::Vector2i)position;
+- (void)notifyTouchMove:(unsigned int)index withTapCount:(unsigned int)tapCount atPosition:(sf::Vector2i)position;
 {
     position.x *= backingScaleFactor;
     position.y *= backingScaleFactor;
@@ -280,6 +303,7 @@ namespace
         sf::Event event;
         event.type = sf::Event::TouchMoved;
         event.touch.finger = index;
+		event.touch.tapCount = tapCount;
         event.touch.x = position.x;
         event.touch.y = position.y;
         sfWindow->forwardEvent(event);
@@ -288,7 +312,7 @@ namespace
 
 
 ////////////////////////////////////////////////////////////
-- (void)notifyTouchEnd:(unsigned int)index atPosition:(sf::Vector2i)position;
+- (void)notifyTouchEnd:(unsigned int)index withTapCount:(unsigned int)tapCount atPosition:(sf::Vector2i)position;
 {
     // clear the touch position
     if (index < touchPositions.size())
@@ -300,6 +324,7 @@ namespace
         sf::Event event;
         event.type = sf::Event::TouchEnded;
         event.touch.finger = index;
+		event.touch.tapCount = tapCount;
         event.touch.x = position.x * backingScaleFactor;
         event.touch.y = position.y * backingScaleFactor;
         sfWindow->forwardEvent(event);

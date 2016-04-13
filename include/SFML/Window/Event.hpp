@@ -163,7 +163,9 @@ public:
     ////////////////////////////////////////////////////////////
     struct TouchEvent
     {
+		static const unsigned int InvalidTapCount = static_cast<unsigned int>(-1);
         unsigned int finger; ///< Index of the finger in case of multi-touch events
+		unsigned int tapCount; ///< count of taps if available else InvalidTapCount
         int x;               ///< X position of the touch, relative to the left of the owner window
         int y;               ///< Y position of the touch, relative to the top of the owner window
     };
@@ -179,6 +181,25 @@ public:
         float y;           ///< Current value of the sensor on Y axis
         float z;           ///< Current value of the sensor on Z axis
     };
+
+	////////////////////////////////////////////////////////////
+	/// \brief Orientation changed event parameters (OrientationChanged)
+	///
+	////////////////////////////////////////////////////////////
+	struct OrientationChangedEvent
+	{
+		enum BasicDeviceOrientation
+		{
+			UnknownOrientation,
+			PortraitRightsideUpOrientation,
+			PortraitUpsideDownOrientation,
+			LandscapeLeftOrientation,
+			LandscapeRightOrientation,
+			FaceUpOrientation,
+			FaceDownOrientation
+		};
+		BasicDeviceOrientation id; ///< Identifier of new orientation
+	};
 
     ////////////////////////////////////////////////////////////
     /// \brief Enumeration of the different types of events
@@ -210,6 +231,7 @@ public:
         TouchEnded,             ///< A touch event ended (data in event.touch)
         SensorChanged,          ///< A sensor value changed (data in event.sensor)
         ShakeMotion,            ///< A shake motion was detected (no data)
+		OrientationChanged,     ///< A basic device orientation change was detected (data in event.orientation)
 
         Count                   ///< Keep last -- the total number of event types
     };
@@ -233,6 +255,7 @@ public:
         JoystickConnectEvent  joystickConnect;   ///< Joystick (dis)connect event parameters (Event::JoystickConnected, Event::JoystickDisconnected)
         TouchEvent            touch;             ///< Touch events parameters (Event::TouchBegan, Event::TouchMoved, Event::TouchEnded)
         SensorEvent           sensor;            ///< Sensor event parameters (Event::SensorChanged)
+		OrientationChangedEvent orientation;     ///< Orientation changed event parameters (Event::OrientationChanged)
     };
 };
 

@@ -72,7 +72,7 @@
 /// \param position Position of the touch
 ///
 ////////////////////////////////////////////////////////////
-- (void)notifyTouchBegin:(unsigned int)index atPosition:(sf::Vector2i)position;
+- (void)notifyTouchBegin:(unsigned int)index withTapCount:(unsigned int)tapCount atPosition:(sf::Vector2i)position;
 
 ////////////////////////////////////////////////////////////
 /// \brief Receive an external touch move notification
@@ -81,7 +81,7 @@
 /// \param position Position of the touch
 ///
 ////////////////////////////////////////////////////////////
-- (void)notifyTouchMove:(unsigned int)index atPosition:(sf::Vector2i)position;
+- (void)notifyTouchMove:(unsigned int)index withTapCount:(unsigned int)tapCount atPosition:(sf::Vector2i)position;
 
 ////////////////////////////////////////////////////////////
 /// \brief Receive an external touch end notification
@@ -90,7 +90,7 @@
 /// \param position Position of the touch
 ///
 ////////////////////////////////////////////////////////////
-- (void)notifyTouchEnd:(unsigned int)index atPosition:(sf::Vector2i)position;
+- (void)notifyTouchEnd:(unsigned int)index withTapCount:(unsigned int)tapCount atPosition:(sf::Vector2i)position;
 
 ////////////////////////////////////////////////////////////
 /// \brief Receive an external shake motion notification
@@ -126,7 +126,7 @@
 /// \brief Initializes the factor which is required to convert from points to pixels and back
 ///
 ////////////////////////////////////////////////////////////
-- (void)initBackingScale;
+- (id)initBackingScale;
 
 ////////////////////////////////////////////////////////////
 // Member data

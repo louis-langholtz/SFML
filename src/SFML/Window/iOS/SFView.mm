@@ -103,7 +103,7 @@
         sf::Vector2i position(static_cast<int>(point.x), static_cast<int>(point.y));
 
         // notify the application delegate
-        [[SFAppDelegate getInstance] notifyTouchBegin:index atPosition:position];
+		[[SFAppDelegate getInstance] notifyTouchBegin:index withTapCount:touch.tapCount atPosition:position];
     }
 }
 
@@ -122,7 +122,7 @@
             sf::Vector2i position(static_cast<int>(point.x), static_cast<int>(point.y));
 
             // notify the application delegate
-            [[SFAppDelegate getInstance] notifyTouchMove:index atPosition:position];
+            [[SFAppDelegate getInstance] notifyTouchMove:index withTapCount:touch.tapCount atPosition:position];
         }
     }
 }
@@ -142,7 +142,7 @@
             sf::Vector2i position(static_cast<int>(point.x), static_cast<int>(point.y));
 
             // notify the application delegate
-            [[SFAppDelegate getInstance] notifyTouchEnd:index atPosition:position];
+            [[SFAppDelegate getInstance] notifyTouchEnd:index withTapCount:touch.tapCount atPosition:position];
 
             // remove the touch
             [self.touches replaceObjectAtIndex:index withObject:[NSNull null]];

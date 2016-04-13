@@ -55,11 +55,13 @@ WindowImplUIKit::WindowImplUIKit(VideoMode mode,
     // Apply the fullscreen flag
     [UIApplication sharedApplication].statusBarHidden = !(style & Style::Titlebar) || (style & Style::Fullscreen);
 
+#if 0
     // Set the orientation according to the requested size
     if (mode.width > mode.height)
         [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationLandscapeLeft];
     else
         [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationPortrait];
+#endif
 
     // Create the window
     CGRect frame = [UIScreen mainScreen].bounds; // Ignore user size, it wouldn't make sense to use something else
@@ -141,6 +143,7 @@ Vector2u WindowImplUIKit::getSize() const
 ////////////////////////////////////////////////////////////
 void WindowImplUIKit::setSize(const Vector2u& size)
 {
+#if 0
     // @todo ...
 
     // if these sizes are required one day, don't forget to scale them!
@@ -152,6 +155,8 @@ void WindowImplUIKit::setSize(const Vector2u& size)
         [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationLandscapeLeft];
     else
         [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationPortrait];
+#endif
+	// Not applicable
 }
 
 
